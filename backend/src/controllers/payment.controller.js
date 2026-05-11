@@ -20,6 +20,13 @@ function frontendResultUrl(orderId) {
   return `${frontend}/payment-result.html?orderId=${orderId}`;
 }
 
+function egyptPhone(phone) {
+  const digits = String(phone || "01000000000").replace(/\D/g, "");
+  if (digits.startsWith("20")) return `+${digits}`;
+  if (digits.startsWith("0")) return `+20${digits.slice(1)}`;
+  return `+20${digits}`;
+}
+
 function unifiedCheckoutUrl(clientSecret) {
   const publicKey = encodeURIComponent(process.env.PAYMOB_PUBLIC_KEY);
   const secret = encodeURIComponent(clientSecret);
@@ -70,25 +77,27 @@ async function initiatePayment(req, res, next) {
       {
         amount: Math.round(order.total * 100),
         currency: process.env.CURRENCY || "EGP",
+        expiration: 3600,
         payment_methods: [Number(process.env.PAYMOB_CARD_INTEGRATION_ID)],
         items: paymobItems,
         billing_data: {
           first_name: firstName,
           last_name: lastName,
           email: req.user.email,
-          phone_number: order.shipping.phone || "01000000000",
+          phone_number: egyptPhone(order.shipping.phone),
           apartment: "NA",
           floor: "NA",
           street: order.shipping.address || "NA",
           building: "NA",
           city: order.shipping.city || "Cairo",
           state: order.shipping.city || "Cairo",
-          country: "EG"
+          country: "EGY"
         },
         customer: {
           first_name: firstName,
           last_name: lastName,
-          email: req.user.email
+          email: req.user.email,
+          phone_number: egyptPhone(order.shipping.phone)
         },
         extras: {
           local_order_id: String(order._id)

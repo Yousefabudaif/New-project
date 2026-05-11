@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify({ orderId: order._id })
       });
 
-      window.cart.clearCart();
+      sessionStorage.setItem("lastCheckoutCart", JSON.stringify(items));
       location.href = payment.paymentUrl;
     } catch (error) {
       message.textContent = error.message;
