@@ -30,8 +30,8 @@ app.use("/api/payments/stripe", paymentRoutes);
 // Serve the static frontend files
 app.use(express.static(path.join(__dirname, '../../frontend')));
 
-// Correct Express 5.x named wildcard route
-app.get('/:splat*', (req, res) => {
+// THE FIX: Use a native Regular Expression /.*/ instead of a string
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend/index.html'));
 });
 
