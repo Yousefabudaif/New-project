@@ -6,7 +6,7 @@ A clean classroom-friendly ecommerce project inspired by the visual style of the
 
 - `frontend/`: plain HTML, CSS, and JavaScript
 - `backend/`: Node.js, Express, MongoDB, Mongoose, JWT
-- Payments: Paymob Egypt sandbox card payment flow
+- Payments: Stripe Checkout test mode
 
 ## Run Locally
 
@@ -43,7 +43,7 @@ Copy-Item backend/.env.example backend/.env
 - Person 6: `frontend/src/app/checkout/page.jsx`, checkout and payment UI
 - Person 7: `backend/src/controllers/auth.controller.js`, auth/JWT/users
 - Person 8: products, categories, and orders backend files
-- Person 9: `backend/src/controllers/payment.controller.js`, Paymob integration
+- Person 9: `backend/src/controllers/payment.controller.js`, Stripe integration
 
 ## Demo Accounts
 
@@ -62,10 +62,10 @@ GET    /api/products/:id
 GET    /api/categories
 POST   /api/orders
 GET    /api/orders/my-orders
-POST   /api/payments/paymob/initiate
-POST   /api/payments/paymob/callback
+POST   /api/payments/stripe/create-checkout-session
+POST   /api/payments/stripe/confirm-session
 ```
 
-## Paymob Sandbox
+## Stripe Test Mode
 
-The backend is set to sandbox/card-only. Add `PAYMOB_CARD_INTEGRATION_ID` in `backend/.env` from the Paymob dashboard before testing a real card redirect.
+The backend is configured with Stripe test keys in `backend/.env`. Checkout uses Stripe's hosted payment page and confirms the returned Checkout Session before marking the order as paid.

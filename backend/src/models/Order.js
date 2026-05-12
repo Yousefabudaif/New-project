@@ -56,12 +56,11 @@ const orderSchema = new mongoose.Schema(
     payment: {
       provider: {
         type: String,
-        default: "paymob"
+        default: "stripe"
       },
       mode: String,
-      paymobOrderId: String,
-      paymobIntentionId: String,
-      clientSecret: String,
+      stripeSessionId: String,
+      stripePaymentIntentId: String,
       transactionId: String,
       paymentUrl: String,
       rawCallback: Object

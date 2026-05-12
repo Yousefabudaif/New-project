@@ -8,7 +8,7 @@ This frontend is plain HTML, CSS, and JavaScript. There is no Next.js, React, Ta
 - `shop.html`: product listing, search, category filter, sorting
 - `product.html`: product details
 - `cart.html`: cart
-- `checkout.html`: shipping form and card payment start
+- `checkout.html`: shipping form and Stripe card payment start
 - `login.html`, `register.html`, `profile.html`: account and order history
 - `css/styles.css`: shared blue ecommerce style
 - `js/api.js`, `js/cart.js`, `js/auth.js`: shared browser logic

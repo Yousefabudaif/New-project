@@ -1,39 +1,53 @@
-const axios = require("axios");
-const crypto = require("crypto");
+const Stripe = require("stripe");
 const Order = require("../models/Order");
 
-const PAYMOB_BASE_URL = "https://accept.paymob.com";
+function stripeClient() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is missing from backend/.env");
+  }
 
-function requiredPaymobEnv() {
-  const required = ["PAYMOB_SECRET_KEY", "PAYMOB_PUBLIC_KEY", "PAYMOB_CARD_INTEGRATION_ID"];
-  return required.filter(key => !process.env[key]);
+  return Stripe(process.env.STRIPE_SECRET_KEY);
 }
 
-function backendBaseUrl(req) {
-  const publicBaseUrl = process.env.BACKEND_PUBLIC_URL;
-  if (publicBaseUrl) return publicBaseUrl.replace(/\/$/, "");
-  return `${req.protocol}://${req.get("host")}`;
+function frontendUrl(path) {
+  const base = (process.env.FRONTEND_URL || "http://localhost:3000").replace(/\/$/, "");
+  return `${base}/${path.replace(/^\//, "")}`;
 }
 
-function frontendResultUrl(orderId) {
-  const frontend = process.env.FRONTEND_URL || "http://localhost:3000";
-  return `${frontend}/payment-result.html?orderId=${orderId}`;
+function currency() {
+  return (process.env.CURRENCY || "EGP").toLowerCase();
 }
 
-function egyptPhone(phone) {
-  const digits = String(phone || "01000000000").replace(/\D/g, "");
-  if (digits.startsWith("20")) return `+${digits}`;
-  if (digits.startsWith("0")) return `+20${digits.slice(1)}`;
-  return `+20${digits}`;
+function lineItemsForOrder(order) {
+  const lines = order.items.map(item => ({
+    quantity: item.quantity,
+    price_data: {
+      currency: currency(),
+      unit_amount: Math.round(item.price * 100),
+      product_data: {
+        name: item.name,
+        images: item.image ? [item.image] : []
+      }
+    }
+  }));
+
+  if (order.shippingFee > 0) {
+    lines.push({
+      quantity: 1,
+      price_data: {
+        currency: currency(),
+        unit_amount: Math.round(order.shippingFee * 100),
+        product_data: {
+          name: "Shipping"
+        }
+      }
+    });
+  }
+
+  return lines;
 }
 
-function unifiedCheckoutUrl(clientSecret) {
-  const publicKey = encodeURIComponent(process.env.PAYMOB_PUBLIC_KEY);
-  const secret = encodeURIComponent(clientSecret);
-  return `${PAYMOB_BASE_URL}/unifiedcheckout/?publicKey=${publicKey}&clientSecret=${secret}`;
-}
-
-async function initiatePayment(req, res, next) {
+async function createCheckoutSession(req, res, next) {
   try {
     const { orderId } = req.body;
     const order = await Order.findOne({ _id: orderId, user: req.user._id });
@@ -46,174 +60,90 @@ async function initiatePayment(req, res, next) {
       return res.status(400).json({ message: "Payment can only start for pending orders." });
     }
 
-    const missing = requiredPaymobEnv();
-    if (missing.length) {
-      return res.status(400).json({
-        message: `Missing Paymob card payment settings: ${missing.join(", ")}`
-      });
-    }
-
-    const names = (order.shipping.fullName || req.user.name || "Shop Customer").split(" ");
-    const firstName = names[0] || "Shop";
-    const lastName = names.slice(1).join(" ") || "Customer";
-    const paymobItems = order.items.map(item => ({
-      name: item.name,
-      amount: Math.round(item.price * 100),
-      quantity: item.quantity,
-      description: item.name
-    }));
-
-    if (order.shippingFee > 0) {
-      paymobItems.push({
-        name: "Shipping",
-        amount: Math.round(order.shippingFee * 100),
-        quantity: 1,
-        description: "Delivery fee"
-      });
-    }
-
-    const intentionResponse = await axios.post(
-      `${PAYMOB_BASE_URL}/v1/intention/`,
-      {
-        amount: Math.round(order.total * 100),
-        currency: process.env.CURRENCY || "EGP",
-        expiration: 3600,
-        payment_methods: [Number(process.env.PAYMOB_CARD_INTEGRATION_ID)],
-        items: paymobItems,
-        billing_data: {
-          first_name: firstName,
-          last_name: lastName,
-          email: req.user.email,
-          phone_number: egyptPhone(order.shipping.phone),
-          apartment: "NA",
-          floor: "NA",
-          street: order.shipping.address || "NA",
-          building: "NA",
-          city: order.shipping.city || "Cairo",
-          state: order.shipping.city || "Cairo",
-          country: "EGY"
-        },
-        customer: {
-          first_name: firstName,
-          last_name: lastName,
-          email: req.user.email,
-          phone_number: egyptPhone(order.shipping.phone)
-        },
-        extras: {
-          local_order_id: String(order._id)
-        },
-        special_reference: String(order._id),
-        notification_url: `${backendBaseUrl(req)}/api/payments/paymob/callback`,
-        redirection_url: frontendResultUrl(order._id)
+    const stripe = stripeClient();
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      payment_method_types: ["card"],
+      customer_email: req.user.email,
+      client_reference_id: String(order._id),
+      line_items: lineItemsForOrder(order),
+      metadata: {
+        orderId: String(order._id),
+        userId: String(req.user._id)
       },
-      {
-        headers: {
-          Authorization: `Token ${process.env.PAYMOB_SECRET_KEY}`,
-          "Content-Type": "application/json"
+      payment_intent_data: {
+        metadata: {
+          orderId: String(order._id),
+          userId: String(req.user._id)
         }
-      }
-    );
+      },
+      success_url: frontendUrl(`payment-result.html?provider=stripe&success=true&session_id={CHECKOUT_SESSION_ID}&orderId=${order._id}`),
+      cancel_url: frontendUrl(`payment-result.html?provider=stripe&success=false&orderId=${order._id}`)
+    });
 
-    const clientSecret = intentionResponse.data.client_secret;
-    const intentionId = intentionResponse.data.id || intentionResponse.data.intention_id;
-    const paymentUrl = unifiedCheckoutUrl(clientSecret);
-
+    order.payment.provider = "stripe";
     order.payment.mode = "sandbox";
-    order.payment.paymobIntentionId = intentionId ? String(intentionId) : "";
-    order.payment.clientSecret = clientSecret;
-    order.payment.paymentUrl = paymentUrl;
+    order.payment.stripeSessionId = session.id;
+    order.payment.paymentUrl = session.url;
     await order.save();
 
     res.json({
-      mode: "sandbox",
-      method: "card",
-      paymentUrl
+      provider: "stripe",
+      paymentUrl: session.url,
+      sessionId: session.id
     });
   } catch (error) {
     next(error);
   }
 }
 
-function legacyCallbackValues(payload) {
-  const keys = [
-    "amount_cents",
-    "created_at",
-    "currency",
-    "error_occured",
-    "has_parent_transaction",
-    "id",
-    "integration_id",
-    "is_3d_secure",
-    "is_auth",
-    "is_capture",
-    "is_refunded",
-    "is_standalone_payment",
-    "is_voided",
-    "order",
-    "owner",
-    "pending",
-    "source_data.pan",
-    "source_data.sub_type",
-    "source_data.type",
-    "success"
-  ];
-
-  const getValue = key => key.split(".").reduce((value, part) => value?.[part], payload) ?? "";
-  return keys.map(getValue).join("");
-}
-
-function verifyPaymobHmac(payload) {
-  if (!process.env.PAYMOB_HMAC_SECRET || !payload.hmac) return true;
-
-  const raw = legacyCallbackValues(payload.obj || payload);
-  const hmac = crypto.createHmac("sha512", process.env.PAYMOB_HMAC_SECRET).update(raw).digest("hex");
-
-  return hmac === payload.hmac;
-}
-
-function callbackOrderReference(payload) {
-  const obj = payload.obj || payload;
-  return (
-    obj.special_reference ||
-    obj.merchant_order_id ||
-    obj.order?.merchant_order_id ||
-    obj.order?.special_reference ||
-    obj.payment_key_claims?.extra?.local_order_id ||
-    obj.extras?.local_order_id ||
-    payload.orderId ||
-    ""
-  );
-}
-
-async function paymobCallback(req, res, next) {
+async function confirmCheckoutSession(req, res, next) {
   try {
-    const payload = { ...req.query, ...req.body };
+    const { sessionId, orderId } = req.body;
 
-    if (!verifyPaymobHmac(payload)) {
-      return res.status(400).json({ message: "Invalid Paymob callback signature." });
+    if (!sessionId || !orderId) {
+      return res.status(400).json({ message: "sessionId and orderId are required." });
     }
 
-    const obj = payload.obj || payload;
-    const orderReference = String(callbackOrderReference(payload));
-    const transactionId = String(obj.id || payload.id || "");
-    const success = String(obj.success ?? payload.success) === "true" || obj.success === true;
-    const pending = String(obj.pending ?? payload.pending) === "true" || obj.pending === true;
-
-    const order = await Order.findById(orderReference);
+    const order = await Order.findOne({ _id: orderId, user: req.user._id });
 
     if (!order) {
-      return res.status(404).json({ message: "Related order not found." });
+      return res.status(404).json({ message: "Order not found." });
     }
 
-    order.status = success ? "paid" : pending ? "pending" : "failed";
-    order.payment.transactionId = transactionId;
-    order.payment.rawCallback = payload;
+    const stripe = stripeClient();
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    if (session.client_reference_id !== String(order._id)) {
+      return res.status(400).json({ message: "Stripe session does not match this order." });
+    }
+
+    order.payment.provider = "stripe";
+    order.payment.stripeSessionId = session.id;
+    order.payment.stripePaymentIntentId = typeof session.payment_intent === "string"
+      ? session.payment_intent
+      : session.payment_intent?.id;
+    order.payment.rawCallback = {
+      payment_status: session.payment_status,
+      status: session.status
+    };
+
+    if (session.payment_status === "paid") {
+      order.status = "paid";
+    } else if (session.status === "expired") {
+      order.status = "failed";
+    }
+
     await order.save();
 
-    res.json({ message: "Payment callback saved.", orderStatus: order.status });
+    res.json({
+      order,
+      stripeStatus: session.status,
+      paymentStatus: session.payment_status
+    });
   } catch (error) {
     next(error);
   }
 }
 
-module.exports = { initiatePayment, paymobCallback };
+module.exports = { createCheckoutSession, confirmCheckoutSession };

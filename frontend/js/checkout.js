@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
       });
 
-      const payment = await window.shopApi.request("/payments/paymob/initiate", {
+      const payment = await window.shopApi.request("/payments/stripe/create-checkout-session", {
         method: "POST",
         body: JSON.stringify({ orderId: order._id })
       });

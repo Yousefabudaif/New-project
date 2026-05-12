@@ -6,12 +6,12 @@ function notFound(req, res, next) {
 function errorHandler(err, req, res, next) {
   if (err.response) {
     const status = err.response.status || 500;
-    const paymobMessage = typeof err.response.data === "string"
+    const providerMessage = typeof err.response.data === "string"
       ? err.response.data
       : err.response.data?.message || err.response.data?.detail || JSON.stringify(err.response.data);
 
     return res.status(status).json({
-      message: `Payment provider error: ${paymobMessage}`,
+      message: `Payment provider error: ${providerMessage}`,
       providerStatus: status
     });
   }

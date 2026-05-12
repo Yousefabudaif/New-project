@@ -1,14 +1,13 @@
 const express = require("express");
 const {
-  initiatePayment,
-  paymobCallback
+  createCheckoutSession,
+  confirmCheckoutSession
 } = require("../controllers/payment.controller");
 const { protect } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
-router.post("/initiate", protect, initiatePayment);
-router.post("/callback", paymobCallback);
-router.get("/callback", paymobCallback);
+router.post("/create-checkout-session", protect, createCheckoutSession);
+router.post("/confirm-session", protect, confirmCheckoutSession);
 
 module.exports = router;

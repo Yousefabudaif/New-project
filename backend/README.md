@@ -10,15 +10,13 @@ This backend is intentionally small so each part can be discussed clearly.
 - `middleware/`: JWT protection and error handling
 - `seed/`: demo data
 
-## Paymob
+## Stripe
 
-Paymob is configured for sandbox card payments only.
+Stripe Checkout is configured in test mode.
 
 Required values in `.env`:
 
-- `PAYMOB_SECRET_KEY`
-- `PAYMOB_PUBLIC_KEY`
-- `PAYMOB_CARD_INTEGRATION_ID`
-- `PAYMOB_HMAC_SECRET`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_PUBLISHABLE_KEY`
 
-The card integration ID comes from the Paymob dashboard. Without it, checkout returns a clear missing-settings message.
+The backend creates Checkout Sessions and the payment result page confirms the session before marking an order as paid.
