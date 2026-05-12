@@ -26,7 +26,13 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments/stripe", paymentRoutes);
+// Serve the static frontend files
+app.use(express.static(path.join(__dirname, '../../frontend')));
 
+// Catch-all route to serve index.html for any other requests (useful if you add client-side routing later)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/index.html'));
+});
 app.use(notFound);
 app.use(errorHandler);
 
