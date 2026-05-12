@@ -46,15 +46,6 @@ async function createOrder(req, res, next) {
   }
 }
 
-async function myOrders(req, res, next) {
-  try {
-    const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
-    res.json(orders);
-  } catch (error) {
-    next(error);
-  }
-}
-
 async function getOrder(req, res, next) {
   try {
     const order = await Order.findOne({ _id: req.params.id, user: req.user._id });
@@ -69,4 +60,4 @@ async function getOrder(req, res, next) {
   }
 }
 
-module.exports = { createOrder, myOrders, getOrder };
+module.exports = { createOrder, getOrder };

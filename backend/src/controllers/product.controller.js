@@ -2,35 +2,7 @@ const Product = require("../models/Product");
 
 async function listProducts(req, res, next) {
   try {
-    const { search = "", category = "", featured = "", sort = "newest" } = req.query;
-    const filter = {};
-
-    if (search) {
-      filter.$or = [
-        { name: new RegExp(search, "i") },
-        { brand: new RegExp(search, "i") },
-        { description: new RegExp(search, "i") }
-      ];
-    }
-
-    if (category) {
-      filter.category = category;
-    }
-
-    if (featured === "true") {
-      filter.featured = true;
-    }
-
-    const sortMap = {
-      newest: { createdAt: -1 },
-      priceLow: { price: 1 },
-      priceHigh: { price: -1 },
-      name: { name: 1 }
-    };
-
-    const products = await Product.find(filter)
-      .populate("category", "name slug")
-      .sort(sortMap[sort] || sortMap.newest);
+    const products = await Product.find().sort({ createdAt: -1 });
 
     res.json(products);
   } catch (error) {
@@ -40,7 +12,7 @@ async function listProducts(req, res, next) {
 
 async function getProduct(req, res, next) {
   try {
-    const product = await Product.findById(req.params.id).populate("category", "name slug");
+    const product = await Product.findById(req.params.id);
 
     if (!product) {
       return res.status(404).json({ message: "Product not found." });

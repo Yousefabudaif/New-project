@@ -1,17 +1,26 @@
-# Simplified Electronics Ecommerce
+# Techtronic Ecommerce
 
-A clean classroom-friendly ecommerce project inspired by the visual style of the Singitronic electronics shop, rebuilt from scratch with a simple structure.
+Simple electronics ecommerce demo built with plain HTML/CSS/JS, Node.js, Express, MongoDB, and Stripe Checkout.
 
-## Stack
+## Run
 
-- `frontend/`: plain HTML, CSS, and JavaScript
-- `backend/`: Node.js, Express, MongoDB, Mongoose, JWT
-- Payments: Stripe Checkout test mode
-
-## Run Locally
+1. Install Node.js.
+2. Clone the repo.
+3. Install dependencies:
 
 ```bash
 npm install
+```
+
+4. Seed the database:
+
+```bash
+npm run seed
+```
+
+5. Start frontend and backend:
+
+```bash
 npm run dev
 ```
 
@@ -19,53 +28,9 @@ Frontend: `http://localhost:3000`
 
 Backend: `http://localhost:5000`
 
-The local env files are already created. For a fresh copy:
-
-```bash
-cp frontend/.env.example frontend/.env.local
-cp backend/.env.example backend/.env
-```
-
-On Windows PowerShell, copy them manually or use:
-
-```powershell
-Copy-Item frontend/.env.example frontend/.env.local
-Copy-Item backend/.env.example backend/.env
-```
-
-## Team Ownership
-
-- Person 1: `frontend/src/components`, layout, header, footer, theme
-- Person 2: `frontend/src/app/page.jsx`, home page
-- Person 3: `frontend/src/app/shop/page.jsx`, shop/search/filter page
-- Person 4: `frontend/src/app/product/[id]/page.jsx`, product details page
-- Person 5: `frontend/src/app/cart/page.jsx`, cart page
-- Person 6: `frontend/src/app/checkout/page.jsx`, checkout and payment UI
-- Person 7: `backend/src/controllers/auth.controller.js`, auth/JWT/users
-- Person 8: products, categories, and orders backend files
-- Person 9: `backend/src/controllers/payment.controller.js`, Stripe integration
-
-## Demo Accounts
-
-Seed creates:
-
-- Email: `user1@student.com`
-- Password: `123456`
-
-## Simplified API
+Demo login:
 
 ```txt
-POST   /api/auth/register
-POST   /api/auth/login
-GET    /api/products
-GET    /api/products/:id
-GET    /api/categories
-POST   /api/orders
-GET    /api/orders/my-orders
-POST   /api/payments/stripe/create-checkout-session
-POST   /api/payments/stripe/confirm-session
+user1@student.com
+123456
 ```
-
-## Stripe Test Mode
-
-The backend is configured with Stripe test keys in `backend/.env`. Checkout uses Stripe's hosted payment page and confirms the returned Checkout Session before marking the order as paid.

@@ -30,12 +30,39 @@
     }).format(value || 0);
   }
 
+  function categoryId(product) {
+    if (!product.category) return "";
+    return product.category._id || product.category;
+  }
+
+  function filterProducts(sourceProducts, params = {}) {
+    const search = (params.search || "").toLowerCase();
+    const category = params.category || "";
+    const sort = params.sort || "newest";
+
+    const products = sourceProducts.filter(product => {
+      const haystack = `${product.name} ${product.brand} ${product.description}`.toLowerCase();
+      const matchesSearch = !search || haystack.includes(search);
+      const matchesCategory = !category || categoryId(product) === category;
+      return matchesSearch && matchesCategory;
+    });
+
+    products.sort((a, b) => {
+      if (sort === "priceLow") return a.price - b.price;
+      if (sort === "priceHigh") return b.price - a.price;
+      if (sort === "name") return a.name.localeCompare(b.name);
+      return 0;
+    });
+
+    return products;
+  }
+
   async function getProducts(params = {}) {
-    const query = new URLSearchParams(params).toString();
     try {
-      return await request("/products" + (query ? `?${query}` : ""));
+      const products = await request("/products");
+      return filterProducts(products, params);
     } catch {
-      return filterDemoProducts(params);
+      return filterProducts(window.demoProducts, params);
     }
   }
 
@@ -49,29 +76,12 @@
 
   async function getCategories() {
     try {
-      return await request("/categories");
+      const products = await request("/products");
+      return [...new Set(products.map(categoryId).filter(Boolean))]
+        .map(name => ({ _id: name, name }));
     } catch {
       return window.demoCategories;
     }
-  }
-
-  function filterDemoProducts(params = {}) {
-    const search = (params.search || "").toLowerCase();
-    const category = params.category || "";
-    const sort = params.sort || "newest";
-    const products = window.demoProducts.filter(product => {
-      const categoryId = product.category && (product.category._id || product.category);
-      const matchesSearch = !search || `${product.name} ${product.brand} ${product.description}`.toLowerCase().includes(search);
-      const matchesCategory = !category || categoryId === category;
-      return matchesSearch && matchesCategory;
-    });
-    products.sort((a, b) => {
-      if (sort === "priceLow") return a.price - b.price;
-      if (sort === "priceHigh") return b.price - a.price;
-      if (sort === "name") return a.name.localeCompare(b.name);
-      return 0;
-    });
-    return products;
   }
 
   window.shopApi = { request, money, getProducts, getProduct, getCategories };

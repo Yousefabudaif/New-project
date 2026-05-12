@@ -30,8 +30,7 @@ const productSchema = new mongoose.Schema(
     },
     gallery: [String],
     category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      type: String,
       required: true
     },
     stock: {

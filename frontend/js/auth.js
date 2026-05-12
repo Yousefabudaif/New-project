@@ -22,14 +22,12 @@
 
     if (user) {
       area.innerHTML = `
-        <a href="profile.html">My Orders</a>
-        <button class="link-button" data-logout>Logout</button>
+        <button class="account-btn" data-logout>Logout</button>
       `;
       area.querySelector("[data-logout]").addEventListener("click", logout);
     } else {
       area.innerHTML = `
-        <a href="login.html">Login</a>
-        <a href="register.html">Register</a>
+        <a class="account-btn" href="login.html">Login</a>
       `;
     }
   }
