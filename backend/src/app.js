@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+// Load environment variables from the root folder
 require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
 require("dotenv").config();
 
@@ -12,27 +13,35 @@ const { notFound, errorHandler } = require("./middleware/error.middleware");
 
 const app = express();
 
+// Configure CORS to allow your Heroku frontend URL
 app.use(cors({
   origin: process.env.FRONTEND_URL || "http://localhost:3000",
   credentials: true
 }));
+
 app.use(express.json());
 
+// API Health Check
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", service: "simple-electronics-api" });
 });
 
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments/stripe", paymentRoutes);
-// Serve the static frontend files
+
+// 1. Serve the static frontend files from the 'frontend' folder
 app.use(express.static(path.join(__dirname, '../../frontend')));
 
-// Catch-all route to serve index.html for any other requests (useful if you add client-side routing later)
-app.get('*', (req, res) => {
+// 2. Catch-all route to serve index.html for any non-API requests
+// Using '/*' is required for Express 5.x compatibility
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend/index.html'));
 });
+
+// Error Handling Middleware
 app.use(notFound);
 app.use(errorHandler);
 
