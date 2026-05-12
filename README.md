@@ -12,13 +12,7 @@ Simple electronics ecommerce demo built with plain HTML/CSS/JS, Node.js, Express
 npm install
 ```
 
-4. Seed the database:
-
-```bash
-npm run seed
-```
-
-5. Start frontend and backend:
+4. Start frontend and backend:
 
 ```bash
 npm run dev

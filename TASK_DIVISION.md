@@ -7,27 +7,25 @@ Files:
 - `frontend/css/home.css`
 
 Task:
-Keep the hero, introduction, categories section, and featured products looking polished.
+Own the hero, introduction section, category tiles, and featured products on the homepage.
 
 ## Person 2: Shop Page
 Files:
 - `frontend/shop.html`
 - `frontend/js/shop.js`
-- `frontend/js/api.js`
 - `frontend/css/products.css`
 
 Task:
-Handle product listing, frontend search, category filter, sorting, and product cards.
+Own the shop page layout, product grid, search box, category dropdown, and sorting UI.
 
-## Person 3: Product Details
+## Person 3: Product Details and Product Cards
 Files:
 - `frontend/product.html`
 - `frontend/js/product.js`
 - `frontend/js/render.js`
-- `frontend/css/products.css`
 
 Task:
-Handle single product display and add-to-cart from product details.
+Own the product details screen, reusable product card rendering, and add-to-cart buttons on product cards.
 
 ## Person 4: Cart
 Files:
@@ -37,7 +35,7 @@ Files:
 - `frontend/css/cart-checkout.css`
 
 Task:
-Handle cart storage, quantity changes, remove buttons, and cart totals.
+Own cart storage, quantity controls, remove item behavior, and cart totals.
 
 ## Person 5: Checkout Frontend
 Files:
@@ -47,17 +45,18 @@ Files:
 - `frontend/js/payment-result.js`
 
 Task:
-Handle checkout form, order summary, redirect to Stripe, and payment result screen.
+Own checkout form, order summary, Stripe redirect from the frontend, and payment result display.
 
-## Person 6: Shared Frontend Style
+## Person 6: Shared Frontend Styling
 Files:
 - `frontend/css/base.css`
 - `frontend/css/header.css`
 - `frontend/css/footer.css`
 - `frontend/css/responsive.css`
+- `frontend/css/styles.css`
 
 Task:
-Handle the main look, header, footer, font, spacing, buttons, and responsive behavior.
+Own the shared visual system: font, colors, buttons, header, footer, spacing, and responsive layout.
 
 ## Person 7: Authentication
 Files:
@@ -72,7 +71,7 @@ Files:
 - `backend/src/middleware/auth.middleware.js`
 
 Task:
-Handle login, register, JWT storage, logout, and protected backend routes.
+Own login, register, logout, JWT storage, user model, and protected route middleware.
 
 ## Person 8: Products and Orders Backend
 Files:
@@ -82,16 +81,19 @@ Files:
 - `backend/src/controllers/order.controller.js`
 - `backend/src/routes/product.routes.js`
 - `backend/src/routes/order.routes.js`
-- `backend/src/seed/seed.js`
 
 Task:
-Handle products, database seed data, order creation, totals, and shipping fee.
+Own product fetching, order creation, order totals, shipping fee, and product/order schemas.
 
-## Person 9: Stripe Payment Backend
+## Person 9: Payments and TechBot
 Files:
 - `backend/src/controllers/payment.controller.js`
 - `backend/src/routes/payment.routes.js`
+- `backend/src/controllers/chat.controller.js`
+- `backend/src/routes/chat.routes.js`
+- `frontend/js/chatbot.js`
+- `frontend/css/chatbot.css`
 - `backend/.env`
 
 Task:
-Handle Stripe Checkout Session creation, session confirmation, and payment-related order updates.
+Own Stripe Checkout backend, payment confirmation, Gemini TechBot backend route, and chatbot widget UI.
