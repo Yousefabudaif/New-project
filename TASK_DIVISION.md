@@ -7,7 +7,7 @@ Files:
 - `frontend/css/home.css`
 
 Task:
-Own the hero, introduction section, category tiles, and featured products on the homepage.
+the hero, introduction section, category tiles, and featured products on the homepage.
 
 ## Person 2: Shop Page
 Files:
@@ -16,7 +16,7 @@ Files:
 - `frontend/css/products.css`
 
 Task:
-Own the shop page layout, product grid, search box, category dropdown, and sorting UI.
+the shop page layout, product grid, search box, category dropdown, and sorting UI.
 
 ## Person 3: Product Details and Product Cards
 Files:
@@ -25,7 +25,7 @@ Files:
 - `frontend/js/render.js`
 
 Task:
-Own the product details screen, reusable product card rendering, and add-to-cart buttons on product cards.
+the product details screen, reusable product card rendering, and add-to-cart buttons on product cards.
 
 ## Person 4: Cart
 Files:
@@ -35,7 +35,7 @@ Files:
 - `frontend/css/cart-checkout.css`
 
 Task:
-Own cart storage, quantity controls, remove item behavior, and cart totals.
+cart storage, quantity controls, remove item behavior, and cart totals.
 
 ## Person 5: Checkout Frontend
 Files:
@@ -45,7 +45,7 @@ Files:
 - `frontend/js/payment-result.js`
 
 Task:
-Own checkout form, order summary, Stripe redirect from the frontend, and payment result display.
+checkout form, order summary, Stripe redirect from the frontend, and payment result display.
 
 ## Person 6: Shared Frontend Styling
 Files:
@@ -56,7 +56,7 @@ Files:
 - `frontend/css/styles.css`
 
 Task:
-Own the shared visual system: font, colors, buttons, header, footer, spacing, and responsive layout.
+the shared visual system: font, colors, buttons, header, footer, spacing, and responsive layout.
 
 ## Person 7: Authentication
 Files:
@@ -71,7 +71,7 @@ Files:
 - `backend/src/middleware/auth.middleware.js`
 
 Task:
-Own login, register, logout, JWT storage, user model, and protected route middleware.
+login, register, logout, JWT storage, user model, and protected route middleware.
 
 ## Person 8: Products and Orders Backend
 Files:
@@ -83,7 +83,7 @@ Files:
 - `backend/src/routes/order.routes.js`
 
 Task:
-Own product fetching, order creation, order totals, shipping fee, and product/order schemas.
+product fetching, order creation, order totals, shipping fee, and product/order schemas.
 
 ## Person 9: Payments and TechBot
 Files:
@@ -91,9 +91,7 @@ Files:
 - `backend/src/routes/payment.routes.js`
 - `backend/src/controllers/chat.controller.js`
 - `backend/src/routes/chat.routes.js`
-- `frontend/js/chatbot.js`
-- `frontend/css/chatbot.css`
-- `backend/.env`
+- optional: the frontend of the chatbot which is an already made widget.
 
 Task:
-Own Stripe Checkout backend, payment confirmation, Gemini TechBot backend route, and chatbot widget UI.
+Stripe Checkout backend, payment confirmation, Together AI TechBot backend.
