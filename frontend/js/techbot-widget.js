@@ -55,7 +55,7 @@
 
   function configureChat(chat) {
     chat.className = "techbot-chat";
-    chat.setAttribute("connect", JSON.stringify({ url: "http://localhost:5000/api/chat", method: "POST" }));
+    chat.setAttribute("connect", JSON.stringify({ url: "/api/chat", method: "POST" }));
     chat.setAttribute("introMessage", JSON.stringify({ text: "Hi, I am TechBot. Ask me for help or product suggestions." }));
     chat.setAttribute("textInput", JSON.stringify({ placeholder: { text: "Ask TechBot..." } }));
     chat.setAttribute("avatars", JSON.stringify({
