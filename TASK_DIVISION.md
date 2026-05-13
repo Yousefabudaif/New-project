@@ -91,8 +91,9 @@ Files:
 - `backend/src/routes/payment.routes.js`
 - `backend/src/controllers/chat.controller.js`
 - `backend/src/routes/chat.routes.js`
-- Deep Chat widget snippet in the frontend HTML pages
+- `frontend/js/techbot-widget.js`
+- `frontend/css/techbot-widget.css`
 - `backend/.env`
 
 Task:
-Own Stripe Checkout backend, payment confirmation, Together AI TechBot backend route, and the small Deep Chat widget configuration.
+Own Stripe Checkout backend, payment confirmation, Together AI TechBot backend route, and the Deep Chat launcher/widget UI.
