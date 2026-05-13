@@ -85,7 +85,7 @@ Files:
 Task:
 product fetching, order creation, order totals, shipping fee, and product/order schemas.
 
-## Person 9: Payments and TechBot
+##9 (yousef abudaif): Payments and TechBot
 Files:
 - `backend/src/controllers/payment.controller.js`
 - `backend/src/routes/payment.routes.js`
