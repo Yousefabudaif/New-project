@@ -1,6 +1,6 @@
 # Team Task Division
 
-## Person 1: Home Page
+## 1- Mahmoud Hamdy: Home Page
 Files:
 - `frontend/index.html`
 - `frontend/js/home.js`
@@ -9,7 +9,7 @@ Files:
 Task:
 the hero, introduction section, category tiles, and featured products on the homepage.
 
-## Person 2: Shop Page
+## 2- Mahmoud Ramadan: Shop Page
 Files:
 - `frontend/shop.html`
 - `frontend/js/shop.js`
@@ -18,7 +18,7 @@ Files:
 Task:
 the shop page layout, product grid, search box, category dropdown, and sorting UI.
 
-## Person 3: Product Details and Product Cards
+## 3- Hassan Arafat: Product Details and Product Cards
 Files:
 - `frontend/product.html`
 - `frontend/js/product.js`
@@ -27,7 +27,7 @@ Files:
 Task:
 the product details screen, reusable product card rendering, and add-to-cart buttons on product cards.
 
-## Person 4: Cart
+## 4- Mohammed Karam: Cart
 Files:
 - `frontend/cart.html`
 - `frontend/js/cart.js`
@@ -37,7 +37,7 @@ Files:
 Task:
 cart storage, quantity controls, remove item behavior, and cart totals.
 
-## Person 5: Checkout Frontend
+## 5- Ahmed Sanad: Checkout Frontend
 Files:
 - `frontend/checkout.html`
 - `frontend/js/checkout.js`
@@ -47,7 +47,7 @@ Files:
 Task:
 checkout form, order summary, Stripe redirect from the frontend, and payment result display.
 
-## Person 6: Shared Frontend Styling
+## 6- Abdelrahman Tabaa: Shared Frontend Styling
 Files:
 - `frontend/css/base.css`
 - `frontend/css/header.css`
@@ -58,7 +58,7 @@ Files:
 Task:
 the shared visual system: font, colors, buttons, header, footer, spacing, and responsive layout.
 
-## Person 7: Authentication
+## 7- Ahmed Asal: Authentication
 Files:
 - `frontend/login.html`
 - `frontend/register.html`
@@ -73,7 +73,7 @@ Files:
 Task:
 login, register, logout, JWT storage, user model, and protected route middleware.
 
-## Person 8: Products and Orders Backend
+## 8- Mohamed Rehab: Products and Orders Backend
 Files:
 - `backend/src/models/Product.js`
 - `backend/src/models/Order.js`
@@ -85,13 +85,14 @@ Files:
 Task:
 product fetching, order creation, order totals, shipping fee, and product/order schemas.
 
-## P9 (yousef abudaif): Payments and TechBot
+## 9- Yousef Abudaif: Payments with Stripe, TechBot AI, and Deployment to heroku
 Files:
 - `backend/src/controllers/payment.controller.js`
 - `backend/src/routes/payment.routes.js`
 - `backend/src/controllers/chat.controller.js`
 - `backend/src/routes/chat.routes.js`
 - optional: the frontend of the chatbot which is an already made widget.
+- Heroku deployment.
 
 Task:
-Stripe Checkout backend, payment confirmation, Together AI TechBot backend.
+Stripe Checkout backend, payment confirmation, Together AI TechBot backend, and deploying the project to Heroku.
