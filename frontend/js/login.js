@@ -1,3 +1,7 @@
+if (window.auth && window.auth.currentUser()) {
+  location.href = "shop.html";
+}
+
 document.getElementById("loginForm").addEventListener("submit", async event => {
   event.preventDefault();
   const form = new FormData(event.currentTarget);

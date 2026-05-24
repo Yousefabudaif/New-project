@@ -18,17 +18,29 @@
   function updateHeader() {
     const user = currentUser();
     const area = document.querySelector("[data-auth-area]");
-    if (!area) return;
+    
+    if (area) {
+      if (user) {
+        area.innerHTML = `
+          <button class="account-btn" data-logout>Logout</button>
+        `;
+        area.querySelector("[data-logout]").addEventListener("click", logout);
+      } else {
+        area.innerHTML = `
+          <a class="account-btn" href="login.html">Login</a>
+        `;
+      }
+    }
 
-    if (user) {
-      area.innerHTML = `
-        <button class="account-btn" data-logout>Logout</button>
-      `;
-      area.querySelector("[data-logout]").addEventListener("click", logout);
-    } else {
-      area.innerHTML = `
-        <a class="account-btn" href="login.html">Login</a>
-      `;
+    // Dynamically update the footer link to say and act as "Logout" if logged in
+    const footerLoginLink = document.querySelector('.footer a[href="login.html"]');
+    if (footerLoginLink && user) {
+      footerLoginLink.textContent = "Logout";
+      footerLoginLink.href = "#";
+      footerLoginLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        logout();
+      });
     }
   }
 
