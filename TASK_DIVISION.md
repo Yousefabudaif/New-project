@@ -7,7 +7,7 @@ Files:
 - `frontend/css/home.css`
 
 Task:
-the hero, introduction section, category tiles, and featured products on the homepage.
+the home, introduction section, category tiles, and featured products on the homepage.
 
 ## 2- Mahmoud Ramadan: Shop Page
 Files:
