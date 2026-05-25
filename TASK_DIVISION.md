@@ -91,7 +91,6 @@ Files:
 - `backend/src/routes/payment.routes.js`
 - `backend/src/controllers/chat.controller.js`
 - `backend/src/routes/chat.routes.js`
-- optional: the frontend of the chatbot which is an already made widget.
 - Heroku deployment.
 
 Task:
